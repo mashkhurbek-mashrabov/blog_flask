@@ -7,8 +7,8 @@
 </head>
 <body>
     <h1>Articles</h1>
-    {% for key, value in articles.items() %}
-    <a href="/blog/{{ key }}">{{ value }}</a><br>
+    {% for slug, article in articles.items() %}
+    <a href="/blog/{{ slug }}">{{ article.title }}</a><br>
     {% endfor %}
 </body>
 </html>

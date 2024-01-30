@@ -2,29 +2,22 @@ import os
 
 from flask import Flask, render_template
 from slugify import slugify
+from articles import Article
+
 
 app = Flask(__name__)
 
-
-def read_articles():
-    articles = os.listdir('articles')
-    article_dict = {}
-    for article in articles:
-        article_dict.update({slugify(article): article})
-    return article_dict
+articles = Article.all()
 
 
 @app.route('/')
 def blog():
-    return render_template('blog.html', articles=read_articles())
+    return render_template('blog.html', articles=articles)
 
-@app.route('/blog/<slug>')
+@app.route("/blog/<slug>")
 def article(slug: str):
-    articles = read_articles()
     article = articles[slug]
-    with open('articles/' + article, 'r') as article_content:
-        content = article_content.read()
-    return render_template('article.html', content=content, title=article)
+    return render_template("article.html", article=article)
 
 
 if __name__ == '__main__':
