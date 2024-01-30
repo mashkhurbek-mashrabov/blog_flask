@@ -7,8 +7,8 @@
 </head>
 <body>
     <h1>Articles</h1>
-    <a href="/blog/first-article">First article</a><br>
-    <a href="/blog/second-article">Second article</a><br>
-    <a href="/blog/third-article">Third article</a><br>
+    {% for key, value in articles.items() %}
+    <a href="/blog/{{ key }}">{{ value }}</a><br>
+    {% endfor %}
 </body>
 </html>
