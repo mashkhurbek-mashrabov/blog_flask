@@ -55,8 +55,10 @@ def logout():
 
 @app.route("/blog/<slug>")
 def article(slug: str):
-    return render_template("article.html", article=articles[slug])
-
+    try:
+        return render_template("article.html", article=articles[slug])
+    except KeyError:
+        return "Not found", 404
 
 @app.get('/new-post')
 def new_post_page():
