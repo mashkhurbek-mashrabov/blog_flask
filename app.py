@@ -41,13 +41,16 @@ def admin_login():
 
     session['user'] = username
 
-    return "you are now authenticated"
+    return redirect('/new-post')
 
 
 @app.get('/logout')
 def logout():
-    session.pop('user', None)
-    return "you are now logged out"
+    try:
+        del session["user"]
+    except KeyError:
+        return "You are already logged out"
+    return "You are now logged out"
 
 
 @app.route("/blog/<slug>")
@@ -58,14 +61,14 @@ def article(slug: str):
 @app.get('/new-post')
 def new_post_page():
     if not is_authenticated():
-        redirect('/login')
+        return redirect('/admin')
     return render_template('new_post.html')
 
 
 @app.post('/new-post')
 def create_new_post():
     if not is_authenticated():
-        redirect('/login')
+        return redirect('/admin')
     title = request.form['title']
     body = request.form['body']
     if articles.get(slugify(title), None):
