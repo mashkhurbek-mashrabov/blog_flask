@@ -6,7 +6,6 @@ from articles import Article
 app = Flask(__name__)
 app.secret_key = "thisisverysecret"
 
-
 articles = Article.all()
 
 users = {
@@ -41,6 +40,12 @@ def admin_login():
     session['user'] = username
 
     return "you are now authenticated"
+
+
+@app.get('/logout')
+def logout():
+    session.pop('user', None)
+    return "you are now logged out"
 
 
 @app.route("/blog/<slug>")
