@@ -25,3 +25,9 @@ class Article:
             articles[article.slug] = article
 
         return articles
+
+    @classmethod
+    def create(cls, title: str, content: str):
+        with open(f"articles/{title}", "a") as file:
+            file.write(content)
+        return cls(title)

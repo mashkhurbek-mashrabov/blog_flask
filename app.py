@@ -1,6 +1,7 @@
 import hashlib
 
-from flask import Flask, render_template, request, session
+from slugify import slugify
+from flask import Flask, render_template, request, session, redirect
 from articles import Article
 
 app = Flask(__name__)
@@ -15,6 +16,7 @@ users = {
 
 @app.route('/')
 def blog():
+    articles = Article.all()
     return render_template('blog.html', articles=articles)
 
 
@@ -51,6 +53,32 @@ def logout():
 @app.route("/blog/<slug>")
 def article(slug: str):
     return render_template("article.html", article=articles[slug])
+
+
+@app.get('/new-post')
+def new_post_page():
+    if not is_authenticated():
+        redirect('/login')
+    return render_template('new_post.html')
+
+
+@app.post('/new-post')
+def create_new_post():
+    if not is_authenticated():
+        redirect('/login')
+    title = request.form['title']
+    body = request.form['body']
+    if articles.get(slugify(title), None):
+        return render_template('new_post.html', error="Article already exists")
+
+    Article.create(title=title, content=body)
+    return redirect('/')
+
+
+def is_authenticated():
+    if "user" in session:
+        return True
+    return False
 
 
 if __name__ == '__main__':
